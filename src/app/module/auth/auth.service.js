@@ -71,7 +71,9 @@ const registrationAccount = async (payload) => {
   if (role === ENUM_USER_ROLE.ADMIN) await Admin.create(userData);
   else await User.create(userData);
 
-  return { message: "Account created successfully. Please check your email" };
+  return {
+    message: "Account created successfully. Please check your email",
+  };
 };
 
 const resendActivationCode = async (payload) => {
