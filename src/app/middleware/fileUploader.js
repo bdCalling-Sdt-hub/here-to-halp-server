@@ -16,6 +16,8 @@ const uploadFile = () => {
 
       if (file.fieldname === "profile_image")
         uploadPath = "uploads/images/profile";
+      else if (fileFilter.fieldname === "blog_image")
+        uploadPath = "uploads/images/blog";
       else uploadPath = "uploads";
 
       createDirIfNotExists(uploadPath);
@@ -33,7 +35,7 @@ const uploadFile = () => {
   });
 
   const fileFilter = (req, file, cb) => {
-    const allowedFieldNames = ["profile_image"];
+    const allowedFieldNames = ["profile_image", "blog_image"];
 
     // Allow requests without files (when there's no fieldname)
     if (!file.fieldname) return cb(null, true);
@@ -50,7 +52,10 @@ const uploadFile = () => {
   const upload = multer({
     storage: storage,
     fileFilter: fileFilter,
-  }).fields([{ name: "profile_image", maxCount: 1 }]);
+  }).fields([
+    { name: "profile_image", maxCount: 1 },
+    { name: "blog_image", maxCount: 1 },
+  ]);
 
   return upload;
 };
