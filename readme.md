@@ -6,4 +6,5 @@
 
 # questions
 
-1. is feedback === testimonial
+1. is feedback === testimonial.
+2. about ticketing system. not logged in users will not be able to view their previous ticket without the device the ticket was submitted from. if he wants to view his prev tickets from anywhere login is required
