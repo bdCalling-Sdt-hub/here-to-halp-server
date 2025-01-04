@@ -62,26 +62,6 @@ const updateTicketStatus = catchAsync(async (req, res) => {
   });
 });
 
-const postFeedback = catchAsync(async (req, res) => {
-  const result = await ServiceService.postFeedback(req.user, req.body);
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: "Feedback posted",
-    data: result,
-  });
-});
-
-const getAllFeedback = catchAsync(async (req, res) => {
-  const result = await ServiceService.getAllFeedback(req.query);
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: "Feedback retrieved",
-    data: result,
-  });
-});
-
 const ServiceController = {
   postTicket,
   getAllTicket,
@@ -89,8 +69,6 @@ const ServiceController = {
   getSingleTicket,
   deleteTicket,
   updateTicketStatus,
-  postFeedback,
-  getAllFeedback,
 };
 
 module.exports = { ServiceController };

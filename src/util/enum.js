@@ -9,7 +9,14 @@ const ENUM_TICKET_STATUS = {
   SOLVED: "solved",
 };
 
+const ENUM_BOOKING_STATUS = {
+  PENDING: "pending",
+  ONGOING: "ongoing",
+  SOLVED: "solved",
+};
+
 module.exports = {
   ENUM_USER_ROLE,
   ENUM_TICKET_STATUS,
+  ENUM_BOOKING_STATUS,
 };
