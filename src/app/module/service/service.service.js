@@ -1,11 +1,11 @@
 const { status } = require("http-status");
 
 const Ticket = require("../ticket/ticket.model");
-const Service = require("./service.model");
 const ApiError = require("../../../error/ApiError");
 const QueryBuilder = require("../../../builder/queryBuilder");
 const validateFields = require("../../../util/validateFields");
 
+// ticket -------------------------------------
 const postTicket = async (userData, payload) => {
   validateFields(payload, [
     "companyName",
@@ -131,36 +131,65 @@ const updateTicketStatus = async (payload) => {
   return result;
 };
 
-const postService = async (userData, payload) => {
-  const { userId } = userData;
-  const serviceData = { user: userId, ...payload };
+// bookings -------------------------------------
+const postBooking = async (userData, payload) => {
+  validateFields(payload, [
+    "companyName",
+    "contactNumber",
+    "email",
+    "priceDetails",
+    "serviceDetails",
+    "location",
+    "description",
+    "status",
+  ]);
 
-  validateFields(payload, ["service"]);
+  const { userId } = userData || {};
+  const { userIdentity } = payload;
 
-  const result = await Service.create(serviceData);
+  if (!userIdentity && !userId)
+    throw new ApiError(status.BAD_REQUEST, "User identity or id is required");
+
+  const bookingData = {
+    ...(userIdentity && { userIdentity }),
+    ...(userId && { user: userId }),
+    companyName: payload.companyName,
+    contactNumber: payload.contactNumber,
+    email: payload.email,
+    priceDetails: payload.priceDetails,
+    serviceDetails: payload.serviceDetails,
+    location: payload.location,
+    description: payload.description,
+    status: payload.status,
+  };
+
+  const result = await Ticket.create(bookingData);
   return result;
 };
 
-const getAllService = async (query) => {
-  const serviceQuery = new QueryBuilder(Service.find({}), query)
-    .search([])
+const getAllBooking = async (query) => {
+  const bookingQuery = new QueryBuilder(Booking.find({}), query)
+    .search(["uniqueId", "companyName", "contactNumber", "email"])
     .filter()
     .sort()
     .paginate()
     .fields();
 
   const [result, meta] = await Promise.all([
-    serviceQuery.modelQuery,
-    serviceQuery.countTotal(),
+    bookingQuery.modelQuery,
+    bookingQuery.countTotal(),
   ]);
-
-  if (!result.length) throw new ApiError(status.NOT_FOUND, "Service not found");
 
   return {
     meta,
     result,
   };
 };
+
+const getSingleBooking = async (userData, payload) => {};
+const getMyBooking = async (userData, payload) => {};
+const deleteBooking = async (userData, payload) => {};
+const updateBookingStatus = async (userData, payload) => {};
 
 const ServiceService = {
   postTicket,
@@ -169,8 +198,13 @@ const ServiceService = {
   getSingleTicket,
   deleteTicket,
   updateTicketStatus,
-  postService,
-  getAllService,
+
+  postBooking,
+  getAllBooking,
+  getSingleBooking,
+  getMyBooking,
+  deleteBooking,
+  updateBookingStatus,
 };
 
 module.exports = { ServiceService };

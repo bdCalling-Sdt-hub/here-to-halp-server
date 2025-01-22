@@ -32,14 +32,6 @@ router
     "/update-ticket-status",
     auth(config.auth_level.admin),
     ServiceController.updateTicketStatus
-  )
-
-  // feedback -------------------------------------
-  .post(
-    "/post-feedback",
-    auth(config.auth_level.user),
-    ServiceController.postFeedback
-  )
-  .get("/get-all-feedback", ServiceController.getAllFeedback);
+  );
 
 module.exports = router;
