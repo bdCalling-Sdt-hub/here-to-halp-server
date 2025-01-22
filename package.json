@@ -1,5 +1,5 @@
 {
-  "name": "track-trek",
+  "name": "here-to-halp-server",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,7 @@
   "keywords": [],
   "author": "thakur-saad",
   "license": "ISC",
-  "description": "track booking and racing service",
+  "description": "network engineering service",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
