@@ -30,7 +30,11 @@ const TicketSchema = new Schema(
     },
     priority: {
       type: String,
-      enum: ["high", "low", "medium"],
+      enum: {
+        values: ["high", "low", "medium"],
+        message:
+          "{VALUE} is not supported. Supported values: high, low, medium",
+      },
       default: "medium",
     },
     service: {
@@ -51,7 +55,11 @@ const TicketSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "ongoing", "solved"],
+      enum: {
+        values: ["pending", "ongoing", "solved"],
+        message:
+          "{VALUE} is not supported. Supported values: high, low, medium",
+      },
       default: "pending",
     },
   },

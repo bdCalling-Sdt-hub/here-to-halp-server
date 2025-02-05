@@ -23,6 +23,11 @@ const postTicket = async (userData, payload) => {
 
   if (!userIdentity && !userId)
     throw new ApiError(status.BAD_REQUEST, "User identity or id is required");
+  if (userIdentity && userId)
+    throw new ApiError(
+      status.BAD_REQUEST,
+      "User identity, id - only one is needed"
+    );
 
   const ticketData = {
     ...(userIdentity && { userIdentity }),
@@ -67,6 +72,11 @@ const getMyTicket = async (userData, query) => {
 
   if (!userIdentity && !userId)
     throw new ApiError(status.BAD_REQUEST, "User identity or id is required");
+  if (userIdentity && userId)
+    throw new ApiError(
+      status.BAD_REQUEST,
+      "User identity, id - only one is needed"
+    );
 
   const findObj = {
     ...(userIdentity && { userIdentity }),
@@ -120,13 +130,13 @@ const updateTicketStatus = async (payload) => {
 
   validateFields(payload, ["ticketId", "status"]);
 
-  const result = await Ticket.updateOne(
+  const result = await Ticket.findOneAndUpdate(
     { _id: ticketId },
-    { status: ticketStatus }
+    { status: ticketStatus },
+    { new: true, runValidators: true }
   );
 
-  if (!result.matchedCount)
-    throw new ApiError(status.NOT_FOUND, "Ticket not found");
+  if (!result) throw new ApiError(status.NOT_FOUND, "Ticket not found");
 
   return result;
 };

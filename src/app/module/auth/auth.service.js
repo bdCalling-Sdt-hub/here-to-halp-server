@@ -77,9 +77,9 @@ const registrationAccount = async (payload) => {
     message: "Account created successfully. Please check your email",
   };
 };
-
+  
 const resendActivationCode = async (payload) => {
-  const email = payload.email;
+  const email = payload.email; 
 
   const user = await Auth.isAuthExist(email);
   if (!user) throw new ApiError(status.BAD_REQUEST, "Email not found!");

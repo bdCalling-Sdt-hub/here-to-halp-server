@@ -2,18 +2,19 @@ const { status } = require("http-status");
 
 const ApiError = require("../../../error/ApiError");
 const QueryBuilder = require("../../../builder/queryBuilder");
-const Blog = require("./blog.model");
+const Blog = require("./news.model");
 const validateFields = require("../../../util/validateFields");
 
-const postBlog = async (req) => {
+const postNews = async (req) => {
   const { files, body } = req;
 
   validateFields(files, ["blog_image"]);
-  validateFields(body, ["title", "content"]);
+  validateFields(body, ["title", "content", "author"]);
 
   const blogData = {
     title: body.title,
     content: body.content,
+    author: body.author,
     blog_image: files.blog_image[0].path,
   };
 
@@ -21,7 +22,7 @@ const postBlog = async (req) => {
   return result;
 };
 
-const getAllBlog = async (query) => {
+const getAllNews = async (query) => {
   const blogQuery = new QueryBuilder(Blog.find({}), query)
     .search(["title"])
     .filter()
@@ -40,7 +41,7 @@ const getAllBlog = async (query) => {
   };
 };
 
-const getSingleBlog = async (query) => {
+const getSingleNews = async (query) => {
   validateFields(query, ["blogId"]);
 
   const blog = await Blog.findById(query.blogId).lean();
@@ -48,7 +49,7 @@ const getSingleBlog = async (query) => {
   return blog;
 };
 
-const deleteSingleBlog = async (query) => {
+const deleteSingleNews = async (query) => {
   validateFields(query, ["blogId"]);
 
   const blog = await Blog.deleteOne({ _id: query.blogId });
@@ -59,10 +60,10 @@ const deleteSingleBlog = async (query) => {
 };
 
 const BlogService = {
-  postBlog,
-  getAllBlog,
-  getSingleBlog,
-  deleteSingleBlog,
+  postNews,
+  getAllNews,
+  getSingleNews,
+  deleteSingleNews,
 };
 
 module.exports = { BlogService };

@@ -4,8 +4,6 @@ const JobSchema = new mongoose.Schema(
   {
     jobRequisitionId: {
       type: String,
-      required: true,
-      trim: true,
     },
     title: {
       type: String,
