@@ -45,7 +45,7 @@ const moduleRoutes = [
   },
   {
     path: "/job",
-    route: ServiceRoutes,
+    route: JobRoutes,
   },
 ];
 
