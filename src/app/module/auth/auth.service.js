@@ -15,7 +15,7 @@ const validateFields = require("../../../util/validateFields");
 const EmailHelpers = require("../../../util/emailHelpers");
 
 const registrationAccount = async (payload) => {
-  const { role, name, password, confirmPassword, email } = payload;
+  const { role, name, password, phoneNumber, confirmPassword, email } = payload;
 
   validateFields(payload, [
     "password",
@@ -23,6 +23,7 @@ const registrationAccount = async (payload) => {
     "email",
     "role",
     "name",
+    "phoneNumber",
   ]);
 
   if (!Object.values(ENUM_USER_ROLE).includes(role))
@@ -66,6 +67,7 @@ const registrationAccount = async (payload) => {
     authId: auth._id,
     name,
     email,
+    phoneNumber,
   };
 
   if (role === ENUM_USER_ROLE.ADMIN) await Admin.create(userData);
