@@ -4,6 +4,7 @@ const otpResendTemp = require("../mail/otpResendTemp");
 const resetPassEmailTemp = require("../mail/resetPassEmailTemp");
 const signUpEmailTemp = require("../mail/signUpEmailTemp");
 const { sendEmail } = require("../util/sendEmail");
+const ticketTemp = require("../mail/ticketTemp");
 
 const sendActivationEmail = async (email, data) => {
   try {
@@ -41,10 +42,23 @@ const sendResetPasswordEmail = async (email, data) => {
   }
 };
 
+const sendTicketEmail = async (email, data) => {
+  try {
+    await sendEmail({
+      email,
+      subject: "BETS Ticket",
+      html: ticketTemp(data),
+    });
+  } catch (error) {
+    throw new ApiError(status.INTERNAL_SERVER_ERROR, error.message);
+  }     
+};
+
 const EmailHelpers = {
   sendActivationEmail,
   sendOtpResendEmail,
   sendResetPasswordEmail,
+  sendTicketEmail,
 };
 
 module.exports = EmailHelpers;

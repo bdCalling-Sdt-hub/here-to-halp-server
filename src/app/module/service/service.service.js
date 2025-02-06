@@ -4,6 +4,7 @@ const Ticket = require("../ticket/ticket.model");
 const ApiError = require("../../../error/ApiError");
 const QueryBuilder = require("../../../builder/queryBuilder");
 const validateFields = require("../../../util/validateFields");
+const EmailHelpers = require("../../../util/emailHelpers");
 
 // ticket -------------------------------------
 const postTicket = async (userData, payload) => {
@@ -43,6 +44,21 @@ const postTicket = async (userData, payload) => {
   };
 
   const result = await Ticket.create(ticketData);
+
+  const emailData = {
+    uniqueId: result.uniqueId,
+    companyName: payload.companyName,
+    email: payload.email,
+    priority: payload.priority,
+    service: payload.service,
+    summary: payload.summary,
+    description: payload.description,
+    document: payload.document,
+    status: result.status,
+  };
+
+  EmailHelpers.sendTicketEmail(payload.email, emailData);
+
   return result;
 };
 
