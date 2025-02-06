@@ -1,107 +1,88 @@
 const { default: status } = require("http-status");
+const User = require("../user/user.model");
+const { ENUM_USER_ROLE } = require("../../../util/enum");
+const Auth = require("../auth/auth.model");
+const QueryBuilder = require("../../../builder/queryBuilder");
+const ApiError = require("../../../error/ApiError");
+const validateFields = require("../../../util/validateFields");
 
-// overview ========================
-const revenue = async (query) => {
-  const { year: strYear } = query;
-  const year = Number(strYear);
+// user-host management ========================
+const getAllUser = async (query) => {
+  const { role, ...newQuery } = query;
 
-  if (!year) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Missing year");
-  }
+  const allowedRoles = [ENUM_USER_ROLE.USER, ENUM_USER_ROLE.HOST];
 
-  const startDate = new Date(year, 0, 1);
-  const endDate = new Date(year + 1, 0, 1);
+  if (!allowedRoles.includes(role))
+    throw new ApiError(status.BAD_REQUEST, "Invalid role");
 
-  const distinctYears = await Transaction.aggregate([
-    {
-      $group: {
-        _id: { $year: "$createdAt" },
-      },
-    },
-    {
-      $sort: { _id: -1 },
-    },
-    {
-      $project: {
-        year: "$_id",
-        _id: 0,
-      },
-    },
+  const emailObj = await Auth.find({ role }).select("-_id email");
+  const emails = emailObj.map((obj) => obj.email);
+
+  const usersQuery = new QueryBuilder(
+    User.find({ email: { $in: emails } })
+      .populate("authId")
+      .lean(),
+    newQuery
+  )
+    .search(["name", "email"])
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const [result, meta] = await Promise.all([
+    usersQuery.modelQuery,
+    usersQuery.countTotal(),
   ]);
 
-  const totalYears = distinctYears.map((item) => item.year);
-
-  const revenue = await Subscription.aggregate([
-    {
-      $match: {
-        createdAt: {
-          $gte: startDate,
-          $lt: endDate,
-        },
-        // paymentStatus: "succeeded", // Only include successful payments
-      },
-    },
-    {
-      $project: {
-        price: 1, // Only keep the price field
-        month: { $month: "$createdAt" }, // Extract the month from createdAt
-      },
-    },
-    {
-      $group: {
-        _id: "$month", // Group by the month
-        totalRevenue: { $sum: "$price" }, // Sum up the price for each month
-      },
-    },
-    {
-      $sort: { _id: 1 }, // Sort the result by month (ascending)
-    },
-  ]);
-
-  const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-
-  const monthlyRevenue = monthNames.reduce((acc, month) => {
-    acc[month] = 0;
-    return acc;
-  }, {});
-
-  revenue.forEach((r) => {
-    const monthName = monthNames[r._id - 1];
-    monthlyRevenue[monthName] = r.totalRevenue;
-  });
-
-  return {
-    total_years: totalYears,
-    monthlyRevenue,
-  };
+  return { meta, result };
 };
 
+const getSingleUser = async (query) => {
+  const { userId } = query;
+
+  validateFields(query, ["userId"]);
+
+  const user = await User.findById(userId);
+
+  if (!user) throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+
+  return { user };
+};
+
+const blockUnblockUser = async (payload) => {
+  const { authId, isBlocked } = payload;
+
+  validateFields(payload, ["authId", "isBlocked"]);
+
+  const user = await Auth.findByIdAndUpdate(
+    authId,
+    { $set: { isBlocked } },
+    {
+      new: true,
+      runValidators: true,
+    }
+  ).select("isBlocked email");
+
+  if (!user) throw new ApiError(status.NOT_FOUND, "User not found");
+
+  return user;
+};
+
+// overview ========================
 const totalOverview = async () => {
-  const [totalAuth, totalUser] = await Promise.all([
-    Auth.countDocuments(),
-    User.countDocuments(),
-    Services.countDocuments(),
-  ]);
+  const [totalUser] = await Promise.all([User.countDocuments()]);
 
   return {
-    totalAuth,
     totalUser,
   };
 };
 
-const DashboardService = { revenue, totalOverview };
+const DashboardService = {
+  totalOverview,
+  getAllUser,
+  getSingleUser,
+  blockUnblockUser,
+};
 
 module.exports = DashboardService;

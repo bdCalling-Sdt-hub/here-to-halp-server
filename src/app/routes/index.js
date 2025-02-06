@@ -11,6 +11,7 @@ const ServiceRoutes = require("../module/service/service.routes");
 const JobRoutes = require("../module/job/job.routes");
 const NewsRoutes = require("../module/news/news.routes");
 const PartnerRequestRoutes = require("../module/partnerRequest/partnerRequest.routes");
+const ReviewRoutes = require("../module/review/review.routes");
 
 const moduleRoutes = [
   {
@@ -26,7 +27,7 @@ const moduleRoutes = [
     route: AdminRoutes,
   },
   {
-    path: "/admin",
+    path: "/dashboard",
     route: DashboardRoutes,
   },
   {
@@ -56,6 +57,10 @@ const moduleRoutes = [
   {
     path: "/partnerRequest",
     route: PartnerRequestRoutes,
+  },
+  {
+    path: "/review",
+    route: ReviewRoutes,
   },
 ];
 
