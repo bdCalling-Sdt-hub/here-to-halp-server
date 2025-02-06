@@ -1,24 +1,24 @@
 const express = require("express");
 const auth = require("../../middleware/auth");
-const { ENUM_USER_ROLE } = require("../../../util/enum");
-const { BlogController } = require("./blog.controller");
+const { newsController } = require("./news.controller");
 const { uploadFile } = require("../../middleware/fileUploader");
+const config = require("../../../config");
 
 const router = express.Router();
 
 router
   .post(
-    "/post-blog",
-    auth(ENUM_USER_ROLE.ADMIN),
+    "/post-news",
+    auth(config.auth_level.admin),
     uploadFile(),
-    BlogController.postBlog
+    newsController.postNews
   )
-  .get("/get-all-blog", BlogController.getAllBlog)
-  .get("/get-single-blog", BlogController.getSingleBlog)
+  .get("/get-all-news", newsController.getAllNews)
+  .get("/get-single-news", newsController.getSingleNews)
   .delete(
-    "/delete-single-blog",
-    auth(ENUM_USER_ROLE.ADMIN),
-    BlogController.deleteSingleBlog
+    "/delete-single-news",
+    auth(config.auth_level.admin),
+    newsController.deleteSingleNews
   );
 
 module.exports = router;

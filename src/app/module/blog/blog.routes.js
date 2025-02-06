@@ -1,15 +1,15 @@
 const express = require("express");
 const auth = require("../../middleware/auth");
-const { ENUM_USER_ROLE } = require("../../../util/enum");
 const { BlogController } = require("./blog.controller");
 const { uploadFile } = require("../../middleware/fileUploader");
+const config = require("../../../config");
 
 const router = express.Router();
 
 router
   .post(
     "/post-blog",
-    auth(ENUM_USER_ROLE.ADMIN),
+    auth(config.auth_level.admin),
     uploadFile(),
     BlogController.postBlog
   )
@@ -17,7 +17,7 @@ router
   .get("/get-single-blog", BlogController.getSingleBlog)
   .delete(
     "/delete-single-blog",
-    auth(ENUM_USER_ROLE.ADMIN),
+    auth(config.auth_level.admin),
     BlogController.deleteSingleBlog
   );
 

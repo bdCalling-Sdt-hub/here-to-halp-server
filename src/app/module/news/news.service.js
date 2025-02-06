@@ -2,37 +2,37 @@ const { status } = require("http-status");
 
 const ApiError = require("../../../error/ApiError");
 const QueryBuilder = require("../../../builder/queryBuilder");
-const Blog = require("./news.model");
+const News = require("./news.model");
 const validateFields = require("../../../util/validateFields");
 
 const postNews = async (req) => {
   const { files, body } = req;
 
-  validateFields(files, ["blog_image"]);
+  validateFields(files, ["news_image"]);
   validateFields(body, ["title", "content", "author"]);
 
-  const blogData = {
+  const newsData = {
     title: body.title,
     content: body.content,
     author: body.author,
-    blog_image: files.blog_image[0].path,
+    news_image: files.news_image[0].path,
   };
 
-  const result = await Blog.create(blogData);
+  const result = await News.create(newsData);
   return result;
 };
 
 const getAllNews = async (query) => {
-  const blogQuery = new QueryBuilder(Blog.find({}), query)
-    .search(["title"])
+  const newsQuery = new QueryBuilder(News.find({}), query)
+    .search(["title", "content", "author"])
     .filter()
     .sort()
     .paginate()
     .fields();
 
   const [result, meta] = await Promise.all([
-    blogQuery.modelQuery,
-    blogQuery.countTotal(),
+    newsQuery.modelQuery,
+    newsQuery.countTotal(),
   ]);
 
   return {
@@ -42,28 +42,29 @@ const getAllNews = async (query) => {
 };
 
 const getSingleNews = async (query) => {
-  validateFields(query, ["blogId"]);
+  validateFields(query, ["newsId"]);
 
-  const blog = await Blog.findById(query.blogId).lean();
-  if (!blog) throw new ApiError(status.NOT_FOUND, "Blog not found");
-  return blog;
+  const news = await News.findById(query.newsId).lean();
+  if (!news) throw new ApiError(status.NOT_FOUND, "news not found");
+
+  return news;
 };
 
 const deleteSingleNews = async (query) => {
-  validateFields(query, ["blogId"]);
+  validateFields(query, ["newsId"]);
 
-  const blog = await Blog.deleteOne({ _id: query.blogId });
-  if (!blog.deletedCount)
-    throw new ApiError(status.NOT_FOUND, "Blog not found");
+  const news = await News.deleteOne({ _id: query.newsId });
+  if (!news.deletedCount)
+    throw new ApiError(status.NOT_FOUND, "news not found");
 
-  return blog;
+  return news;
 };
 
-const BlogService = {
+const newsService = {
   postNews,
   getAllNews,
   getSingleNews,
   deleteSingleNews,
 };
 
-module.exports = { BlogService };
+module.exports = { newsService };

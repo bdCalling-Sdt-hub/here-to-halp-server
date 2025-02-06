@@ -1,52 +1,52 @@
-const { BlogService } = require("./news.service");
+const { newsService } = require("./news.service");
 const sendResponse = require("../../../shared/sendResponse");
 const catchAsync = require("../../../shared/catchAsync");
 
-const postBlog = catchAsync(async (req, res) => {
-  const result = await BlogService.postBlog(req);
+const postNews = catchAsync(async (req, res) => {
+  const result = await newsService.postNews(req);
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "Blog posted",
+    message: "News posted",
     data: result,
   });
 });
 
-const getAllBlog = catchAsync(async (req, res) => {
-  const result = await BlogService.getAllBlog(req.query);
+const getAllNews = catchAsync(async (req, res) => {
+  const result = await newsService.getAllNews(req.query);
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "Blog retrieved",
+    message: "News retrieved",
     data: result,
   });
 });
 
-const getSingleBlog = catchAsync(async (req, res) => {
-  const result = await BlogService.getSingleBlog(req.query);
+const getSingleNews = catchAsync(async (req, res) => {
+  const result = await newsService.getSingleNews(req.query);
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "Blog retrieved",
+    message: "News retrieved",
     data: result,
   });
 });
 
-const deleteSingleBlog = catchAsync(async (req, res) => {
-  const result = await BlogService.deleteSingleBlog(req.query);
+const deleteSingleNews = catchAsync(async (req, res) => {
+  const result = await newsService.deleteSingleNews(req.query);
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "Blog deleted",
+    message: "News deleted",
     data: result,
   });
 });
 
-const BlogController = {
-  postBlog,
-  getAllBlog,
-  getSingleBlog,
-  deleteSingleBlog,
+const newsController = {
+  postNews,
+  getAllNews,
+  getSingleNews,
+  deleteSingleNews,
 };
 
-module.exports = { BlogController };
+module.exports = { newsController };
