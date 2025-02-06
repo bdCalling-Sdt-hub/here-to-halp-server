@@ -29,6 +29,9 @@ const UserSchema = new Schema(
     address: {
       type: String,
     },
+    designation: {
+      type: String,
+    },
   },
   {
     timestamps: true,
