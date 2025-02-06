@@ -58,7 +58,7 @@ const TicketSchema = new Schema(
       enum: {
         values: ["pending", "ongoing", "solved"],
         message:
-          "{VALUE} is not supported. Supported values: high, low, medium",
+          "{VALUE} is not supported. Supported values: pending, ongoing, solved",
       },
       default: "pending",
     },

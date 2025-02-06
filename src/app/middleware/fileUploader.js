@@ -1,7 +1,13 @@
 const multer = require("multer");
 const fs = require("fs");
 
-const allowedMimeTypes = ["image/jpeg", "image/png", "image/jpg", "image/webp"];
+const allowedMimeTypes = [
+  "image/jpeg",
+  "image/png",
+  "image/jpg",
+  "image/webp",
+  "application/pdf",
+];
 
 const isValidFileType = (mimetype) => allowedMimeTypes.includes(mimetype);
 
@@ -20,6 +26,7 @@ const uploadFile = () => {
         uploadPath = "uploads/images/blog";
       else if (file.fieldname === "news_image")
         uploadPath = "uploads/images/news";
+      else if (file.fieldname === "resume") uploadPath = "uploads/pdf/resume";
       else uploadPath = "uploads";
 
       createDirIfNotExists(uploadPath);
@@ -37,7 +44,12 @@ const uploadFile = () => {
   });
 
   const fileFilter = (req, file, cb) => {
-    const allowedFieldNames = ["profile_image", "blog_image", "news_image"];
+    const allowedFieldNames = [
+      "profile_image",
+      "blog_image",
+      "news_image",
+      "resume",
+    ];
 
     // Allow requests without files (when there's no fieldname)
     if (!file.fieldname) return cb(null, true);
@@ -58,6 +70,7 @@ const uploadFile = () => {
     { name: "profile_image", maxCount: 1 },
     { name: "blog_image", maxCount: 1 },
     { name: "news_image", maxCount: 1 },
+    { name: "resume", maxCount: 1 },
   ]);
 
   return upload;
