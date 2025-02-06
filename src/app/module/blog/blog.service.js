@@ -7,17 +7,14 @@ const validateFields = require("../../../util/validateFields");
 
 const postBlog = async (req) => {
   const { files, body } = req;
-  console.log(files);
 
   validateFields(files, ["blog_image"]);
-  validateFields(body, ["title", "subTitle", "content", "author"]);
+  validateFields(body, ["title", "content"]);
 
   const blogData = {
     title: body.title,
-    subTitle: body.subTitle,
     content: body.content,
     blog_image: files.blog_image[0].path,
-    author: body.author,
   };
 
   const result = await Blog.create(blogData);
@@ -26,7 +23,7 @@ const postBlog = async (req) => {
 
 const getAllBlog = async (query) => {
   const blogQuery = new QueryBuilder(Blog.find({}), query)
-    .search([])
+    .search(["title"])
     .filter()
     .sort()
     .paginate()

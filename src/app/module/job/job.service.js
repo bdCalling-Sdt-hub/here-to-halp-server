@@ -5,21 +5,20 @@ const validateFields = require("../../../util/validateFields");
 const Job = require("./Job");
 
 const postJob = async (payload) => {
-  validateFields(payload, ["title", "location", "details"]);
+  validateFields(payload, ["title", "location", "description"]);
 
-  // const jobData = {
-  //   title: payload.title,
-  //   location: payload.location,
-  //   description: payload.description,
-  // };
+  const jobData = {
+    title: payload.title,
+    location: payload.location,
+    description: payload.description,
+  };
 
-  return await Job.create(payload);
-  // return await Job.create(jobData);
+  return await Job.create(jobData);
 };
 
 const getAllJob = async (query) => {
   const jobQuery = new QueryBuilder(Job.find({}), query)
-    .search(["jobRequisitionId", "title", "location"])
+    .search(["jobRequisitionId", "title", "location", "description"])
     .filter()
     .sort()
     .paginate()

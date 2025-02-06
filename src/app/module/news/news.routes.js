@@ -1,6 +1,6 @@
 const express = require("express");
 const auth = require("../../middleware/auth");
-const { BlogController } = require("./blog.controller");
+const { newsController } = require("./news.controller");
 const { uploadFile } = require("../../middleware/fileUploader");
 const config = require("../../../config");
 
@@ -8,17 +8,17 @@ const router = express.Router();
 
 router
   .post(
-    "/post-blog",
+    "/post-news",
     auth(config.auth_level.admin),
     uploadFile(),
-    BlogController.postBlog
+    newsController.postNews
   )
-  .get("/get-all-blog", BlogController.getAllBlog)
-  .get("/get-single-blog", BlogController.getSingleBlog)
+  .get("/get-all-news", newsController.getAllNews)
+  .get("/get-single-news", newsController.getSingleNews)
   .delete(
-    "/delete-single-blog",
+    "/delete-single-news",
     auth(config.auth_level.admin),
-    BlogController.deleteSingleBlog
+    newsController.deleteSingleNews
   );
 
 module.exports = router;
