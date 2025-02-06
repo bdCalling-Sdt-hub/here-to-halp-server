@@ -12,6 +12,26 @@ const postFeedback = catchAsync(async (req, res) => {
   });
 });
 
+const getFeedback = catchAsync(async (req, res) => {
+  const result = await FeedbackService.getFeedback(req.query);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Feedback retrieved",
+    data: result,
+  });
+});
+
+const getMyFeedback = catchAsync(async (req, res) => {
+  const result = await FeedbackService.getMyFeedback(req.user);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Feedback retrieved",
+    data: result,
+  });
+});
+
 const getAllFeedback = catchAsync(async (req, res) => {
   const result = await FeedbackService.getAllFeedback(req.query);
   sendResponse(res, {
@@ -22,9 +42,33 @@ const getAllFeedback = catchAsync(async (req, res) => {
   });
 });
 
+const replyFeedback = catchAsync(async (req, res) => {
+  const result = await FeedbackService.replyFeedback(req.body);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Feedback replied",
+    data: result,
+  });
+});
+
+const deleteFeedback = catchAsync(async (req, res) => {
+  const result = await FeedbackService.deleteFeedback(req.query);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Feedback deleted",
+    data: result,
+  });
+});
+
 const FeedbackController = {
   postFeedback,
+  getFeedback,
+  getMyFeedback,
   getAllFeedback,
+  replyFeedback,
+  deleteFeedback,
 };
 
 module.exports = { FeedbackController };
