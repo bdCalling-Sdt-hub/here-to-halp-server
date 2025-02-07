@@ -6,6 +6,7 @@ const reviewSchema = new Schema(
     user: {
       type: ObjectId,
       ref: "User",
+      required: true,
     },
     userName: {
       type: String,

@@ -6,7 +6,7 @@ const postReview = async (userData, payload) => {
   validateFields(payload, ["userName", "address", "review"]);
 
   const reviewData = {
-    ...(userData && { user: userData.userId }),
+    user: userData.userId,
     ...payload,
   };
 
@@ -20,7 +20,7 @@ const getAllReview = async (query) => {
     Review.find({}).populate([
       {
         path: "user",
-        select: "name address",
+        select: "name address profile_image",
       },
     ]),
     query
