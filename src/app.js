@@ -9,7 +9,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://10.0.60.44:3002"],
+    origin: ["http://10.0.60.44:3002", "http://10.0.60.44:3004"],
     credentials: true,
   })
 );

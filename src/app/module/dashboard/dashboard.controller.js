@@ -29,7 +29,7 @@ const blockUnblockUser = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "Blocked successfully",
+    message: "Successfully updated",
     data: result,
   });
 });

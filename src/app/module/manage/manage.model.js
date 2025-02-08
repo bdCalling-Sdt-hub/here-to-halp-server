@@ -27,7 +27,11 @@ const privacySchema = new mongoose.Schema(
 
 const faqSchema = new mongoose.Schema(
   {
-    description: {
+    question: {
+      type: String,
+      required: true,
+    },
+    answer: {
       type: String,
       required: true,
     },
@@ -51,9 +55,11 @@ const aboutUsSchema = new mongoose.Schema(
 
 const contactUsSchema = new mongoose.Schema(
   {
-    description: {
-      type: String,
-      required: true,
+    callToUs: {
+      type: Array,
+    },
+    writeToUs: {
+      type: Array,
     },
   },
   {
