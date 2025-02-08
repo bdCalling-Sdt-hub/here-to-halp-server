@@ -1,7 +1,7 @@
 const express = require("express");
-const JobController = require("./Job.controller");
 const config = require("../../../config");
 const auth = require("../../middleware/auth");
+const JobController = require("./Job.controller.js");
 const router = express.Router();
 
 router
