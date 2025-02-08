@@ -1,6 +1,6 @@
 const catchAsync = require("../../../shared/catchAsync");
 const sendResponse = require("../../../shared/sendResponse");
-const JobService = require("./Job.service");
+const JobService = require("./job.service");
 
 const postJob = catchAsync(async (req, res) => {
   const result = await JobService.postJob(req.body);
