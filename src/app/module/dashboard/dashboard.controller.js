@@ -45,11 +45,22 @@ const totalOverview = catchAsync(async (req, res) => {
   });
 });
 
+const growth = catchAsync(async (req, res) => {
+  const result = await DashboardService.growth(req.query);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Growth retrieved successfully",
+    data: result,
+  });
+});
+
 const DashboardController = {
   totalOverview,
   getAllUser,
   getSingleUser,
   blockUnblockUser,
+  growth,
 };
 
 module.exports = DashboardController;
