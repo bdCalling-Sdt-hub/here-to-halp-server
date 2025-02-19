@@ -32,6 +32,26 @@ router
     "/update-ticket-status",
     auth(config.auth_level.admin),
     ServiceController.updateTicketStatus
+  )
+  .post(
+    "/post-service",
+    auth(config.auth_level.admin),
+    ServiceController.addService
+  )
+  .get(
+    "/get-service",
+    auth(config.auth_level.admin),
+    ServiceController.getService
+  )
+  .patch(
+    "/update-service",
+    auth(config.auth_level.admin),
+    ServiceController.updateService
+  )
+  .delete(
+    "/delete-service",
+    auth(config.auth_level.admin),
+    ServiceController.deleteService
   );
 
 module.exports = router;

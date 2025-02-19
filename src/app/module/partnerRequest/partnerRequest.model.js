@@ -7,9 +7,9 @@ const PartnerRequestSchema = new Schema(
   {
     user: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "user",
     },
-    fullName: {
+    businessName: {
       type: String,
       required: true,
       trim: true,
@@ -42,35 +42,33 @@ const PartnerRequestSchema = new Schema(
       required: [true, "Country is required"],
       trim: true,
     },
+    businessWebsite: {
+      type: String,
+      trim: true,
+    },
+    industryType: {
+      type: String,
+      trim: true,
+    },
     description: {
       type: String,
       required: true,
       trim: true,
     },
-    position: {
+    typeOfPartnership: {
+      type: Array,
+      required: true,
+    },
+    hasActiveClients: {
+      type: Boolean,
+      required: true,
+    },
+    numOfEmployees: {
       type: String,
       required: true,
       trim: true,
     },
-    previousJobTitle: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    previousJobStartDate: {
-      type: Date,
-      required: true,
-    },
-    previousJobEndDate: {
-      type: Date,
-      required: true,
-    },
-    previousJobDescription: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    resume: {
+    additionalComments: {
       type: String,
       required: true,
     },

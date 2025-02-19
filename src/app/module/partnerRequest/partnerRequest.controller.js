@@ -3,7 +3,7 @@ const sendResponse = require("../../../shared/sendResponse");
 const catchAsync = require("../../../shared/catchAsync");
 
 const postPartnerReq = catchAsync(async (req, res) => {
-  const result = await PartnerRequestService.postPartnerReq(req);
+  const result = await PartnerRequestService.postPartnerReq(req.user, req.body);
   sendResponse(res, {
     statusCode: 200,
     success: true,
