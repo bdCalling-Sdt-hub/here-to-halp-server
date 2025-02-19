@@ -24,6 +24,7 @@ router
   )
 
   // overview ========================
+  .get("/growth", auth(config.auth_level.admin), DashboardController.growth)
   .get(
     "/total-overview",
     auth(config.auth_level.admin),

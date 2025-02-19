@@ -5,6 +5,7 @@ const ApiError = require("../../../error/ApiError");
 const QueryBuilder = require("../../../builder/queryBuilder");
 const validateFields = require("../../../util/validateFields");
 const EmailHelpers = require("../../../util/emailHelpers");
+const Service = require("./Service");
 
 // ticket -------------------------------------
 const postTicket = async (userData, payload) => {
@@ -213,9 +214,62 @@ const getAllBooking = async (query) => {
 };
 
 const getSingleBooking = async (userData, payload) => {};
+
 const getMyBooking = async (userData, payload) => {};
+
 const deleteBooking = async (userData, payload) => {};
+
 const updateBookingStatus = async (userData, payload) => {};
+
+// service packages -------------------------------------
+
+const addService = async (payload) => {
+  validateFields(payload, ["serviceName"]);
+
+  const service = await Service.create(payload);
+
+  return service;
+};
+
+const getService = async (query) => {
+  validateFields(query, ["serviceName"]);
+
+  const serviceName = query.serviceName.trim().toLowerCase();
+
+  const service = await Service.findOne({
+    serviceName: serviceName,
+  }).lean();
+
+  if (!service) throw new ApiError(status.NOT_FOUND, "Service not found");
+  return service;
+};
+
+const updateService = async (payload) => {
+  validateFields(payload, ["serviceName"]);
+
+  const service = await Service.findOneAndUpdate(
+    { serviceName: payload.serviceName },
+    { packages: payload.packages },
+    { new: true, runValidators: true }
+  );
+
+  return service;
+};
+
+const deleteService = async (query) => {
+  validateFields(query, ["serviceName"]);
+
+  const serviceName = query.serviceName.trim().toLowerCase();
+
+  const service = await Service.deleteOne({
+    serviceName: serviceName,
+  }).lean();
+
+  if (!service.deletedCount)
+    throw new ApiError(status.NOT_FOUND, "Service not found");
+
+  return service;
+};
 
 const ServiceService = {
   postTicket,
@@ -231,6 +285,11 @@ const ServiceService = {
   getMyBooking,
   deleteBooking,
   updateBookingStatus,
+
+  addService,
+  getService,
+  updateService,
+  deleteService,
 };
 
 module.exports = { ServiceService };

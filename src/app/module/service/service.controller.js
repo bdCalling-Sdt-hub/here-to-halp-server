@@ -62,6 +62,48 @@ const updateTicketStatus = catchAsync(async (req, res) => {
   });
 });
 
+// service packages -------------------------------------
+
+const addService = catchAsync(async (req, res) => {
+  const result = await ServiceService.addService(req.body);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Service added",
+    data: result,
+  });
+});
+
+const getService = catchAsync(async (req, res) => {
+  const result = await ServiceService.getService(req.query);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Service retrieved",
+    data: result,
+  });
+});
+
+const updateService = catchAsync(async (req, res) => {
+  const result = await ServiceService.updateService(req.body);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Service updated",
+    data: result,
+  });
+});
+
+const deleteService = catchAsync(async (req, res) => {
+  const result = await ServiceService.deleteService(req.body);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Service deleted",
+    data: result,
+  });
+});
+
 const ServiceController = {
   postTicket,
   getAllTicket,
@@ -69,6 +111,11 @@ const ServiceController = {
   getSingleTicket,
   deleteTicket,
   updateTicketStatus,
+
+  addService,
+  getService,
+  updateService,
+  deleteService,
 };
 
 module.exports = { ServiceController };

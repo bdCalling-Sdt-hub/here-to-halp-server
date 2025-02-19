@@ -4,41 +4,38 @@ const QueryBuilder = require("../../../builder/queryBuilder");
 const PartnerRequest = require("./partnerRequest.model");
 const validateFields = require("../../../util/validateFields");
 
-const postPartnerReq = async (req) => {
-  const { files, body, user } = req;
-
-  validateFields(files, ["resume"]);
-  validateFields(body, [
-    "fullName",
+const postPartnerReq = async (user, payload) => {
+  validateFields(payload, [
+    "businessName",
     "contactNumber",
     "email",
     "city",
     "state",
     "country",
+    "businessWebsite",
+    "industryType",
     "description",
-    "position",
-    "previousJobTitle",
-    "previousJobStartDate",
-    "previousJobEndDate",
-    "previousJobDescription",
+    "typeOfPartnership",
+    "hasActiveClients",
+    "numOfEmployees",
+    "additionalComments",
   ]);
 
   const partnerReqData = {
     ...(user && { user: user.userId }),
-    fullName: body.fullName,
-    contactNumber: body.contactNumber,
-    email: body.email,
-    city: body.city,
-    state: body.state,
-    country: body.country,
-    description: body.description,
-    position: body.position,
-    previousJobTitle: body.previousJobTitle,
-    previousJobStartDate: body.previousJobStartDate,
-    previousJobEndDate: body.previousJobEndDate,
-    previousJobDescription: body.previousJobDescription,
-    resume: files.resume[0].path,
-    status: body.status || "pending",
+    businessName: payload.businessName,
+    contactNumber: payload.contactNumber,
+    email: payload.email,
+    city: payload.city,
+    state: payload.state,
+    country: payload.country,
+    businessWebsite: payload.businessWebsite,
+    industryType: payload.industryType,
+    description: payload.description,
+    typeOfPartnership: payload.typeOfPartnership,
+    hasActiveClients: payload.hasActiveClients,
+    numOfEmployees: payload.numOfEmployees,
+    additionalComments: payload.additionalComments,
   };
 
   const result = await PartnerRequest.create(partnerReqData);
@@ -47,7 +44,7 @@ const postPartnerReq = async (req) => {
 
 const getAllPartnerReq = async (query) => {
   const partnerReqQuery = new QueryBuilder(PartnerRequest.find({}), query)
-    .search(["fullName", "email", "contactNumber"])
+    .search(["businessName", "email", "contactNumber"])
     .filter()
     .sort()
     .paginate()

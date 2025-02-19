@@ -9,7 +9,7 @@ const router = express.Router();
 router
   .post(
     "/post-partner-request",
-    auth(config.auth_level.user),
+    auth(config.auth_level.user, false),
     uploadFile(),
     PartnerRequestController.postPartnerReq
   )

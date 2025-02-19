@@ -78,11 +78,92 @@ const totalOverview = async () => {
   };
 };
 
+const growth = async (query) => {
+  const { year: yearStr, role } = query;
+
+  validateFields(query, ["role", "year"]);
+
+  const year = Number(yearStr);
+  const startOfYear = new Date(year, 0, 1);
+  const endOfYear = new Date(year + 1, 0, 1);
+
+  const months = Array.from({ length: 12 }, (_, i) =>
+    new Date(0, i).toLocaleString("en", { month: "long" })
+  );
+
+  // Aggregate monthly registration counts and list of all years
+  const [monthlyRegistration, distinctYears] = await Promise.all([
+    Auth.aggregate([
+      {
+        $match: {
+          role: role,
+          createdAt: {
+            $gte: startOfYear,
+            $lt: endOfYear,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: { $month: "$createdAt" },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          month: "$_id",
+          count: 1,
+          _id: 0,
+        },
+      },
+    ]),
+    Auth.aggregate([
+      {
+        $match: {
+          role: role,
+        },
+      },
+      {
+        $group: {
+          _id: { $year: "$createdAt" },
+        },
+      },
+      {
+        $project: {
+          year: "$_id",
+          _id: 0,
+        },
+      },
+      {
+        $sort: {
+          year: 1,
+        },
+      },
+    ]),
+  ]);
+
+  const total_years = distinctYears.map((item) => item.year);
+
+  // Initialize result object with all months set to 0
+  const result = months.reduce((acc, month) => ({ ...acc, [month]: 0 }), {});
+
+  // Populate result with actual registration counts
+  monthlyRegistration.forEach(({ month, count }) => {
+    result[months[month - 1]] = count;
+  });
+
+  return {
+    total_years,
+    monthlyRegistration: result,
+  };
+};
+
 const DashboardService = {
   totalOverview,
   getAllUser,
   getSingleUser,
   blockUnblockUser,
+  growth,
 };
 
 module.exports = DashboardService;
