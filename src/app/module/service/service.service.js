@@ -246,10 +246,19 @@ const getService = async (query) => {
 
 const updateService = async (payload) => {
   validateFields(payload, ["serviceName"]);
+  const currentPackages = payload.packages;
+
+  for (let package of currentPackages) {
+    for (key in package) if (!package[key]) delete package[key];
+  }
+
+  const newPackages = currentPackages.filter(
+    (package) => Object.keys(package).length
+  );
 
   const service = await Service.findOneAndUpdate(
     { serviceName: payload.serviceName },
-    { packages: payload.packages },
+    { packages: newPackages },
     { new: true, runValidators: true }
   );
 
