@@ -40,7 +40,6 @@ router
   )
   .get(
     "/get-service",
-    auth(config.auth_level.admin),
     ServiceController.getService
   )
   .patch(

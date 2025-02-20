@@ -6,13 +6,20 @@ const reviewSchema = new Schema(
     user: {
       type: ObjectId,
       ref: "User",
-      required: true,
     },
     userName: {
       type: String,
       required: true,
     },
     address: {
+      type: String,
+      required: true,
+    },
+    occupation: {
+      type: String,
+      required: true,
+    },
+    profile_image: {
       type: String,
       required: true,
     },
