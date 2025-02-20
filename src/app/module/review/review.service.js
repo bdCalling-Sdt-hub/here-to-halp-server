@@ -2,11 +2,12 @@ const Review = require("./review.model");
 const QueryBuilder = require("../../../builder/queryBuilder");
 const validateFields = require("../../../util/validateFields");
 
-const postReview = async (userData, payload) => {
-  validateFields(payload, ["userName", "address", "review"]);
+const postReview = async (userData, payload, files) => {
+  validateFields(payload, ["userName", "address", "review", "occupation"]);
+  validateFields(files, ["profile_image"]);
 
   const reviewData = {
-    user: userData.userId,
+    profile_image: files.profile_image[0].path,
     ...payload,
   };
 
