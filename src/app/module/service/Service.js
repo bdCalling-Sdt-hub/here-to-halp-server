@@ -12,19 +12,15 @@ const ServiceSchema = new mongoose.Schema(
       {
         pricingOption: {
           type: String,
-          required: true,
         },
         currentPrice: {
           type: String,
-          required: true,
         },
         newPrice: {
           type: String,
-          required: true,
         },
         newSubtitle: {
           type: String,
-          required: true,
         },
       },
     ],
