@@ -1,6 +1,8 @@
 const Review = require("./review.model");
 const QueryBuilder = require("../../../builder/queryBuilder");
 const validateFields = require("../../../util/validateFields");
+const ApiError = require("../../../error/ApiError");
+const { default: status } = require("http-status");
 
 const postReview = async (userData, payload, files) => {
   validateFields(payload, ["userName", "address", "review", "occupation"]);
@@ -43,9 +45,21 @@ const getAllReview = async (query) => {
   };
 };
 
+const deleteReview = async (query) => {
+  validateFields(query, ["reviewId"]);
+
+  const result = await Review.deleteOne({ _id: query.reviewId });
+
+  if (!result.deletedCount)
+    throw new ApiError(status.NOT_FOUND, "Review not found");
+
+  return result;
+};
+
 const ReviewService = {
   postReview,
   getAllReview,
+  deleteReview,
 };
 
 module.exports = { ReviewService };
