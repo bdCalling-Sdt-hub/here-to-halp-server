@@ -13,6 +13,11 @@ router
     uploadFile(),
     ReviewController.postReview
   )
-  .get("/get-all-review", ReviewController.getAllReview);
+  .get("/get-all-review", ReviewController.getAllReview)
+  .delete(
+    "/delete-review",
+    auth(config.auth_level.admin),
+    ReviewController.deleteReview
+  );
 
 module.exports = router;
