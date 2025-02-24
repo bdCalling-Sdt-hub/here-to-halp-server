@@ -9,13 +9,18 @@ const app = express();
 
 app.use(
   cors({
-    // origin: [
-    //   "http://10.0.60.44:3002",
-    //   "http://10.0.60.44:3005",
-    //   "http://10.0.60.44:3004",
-    //   "https://just-client-vercel-heretohelp.vercel.app",
-    // ],
-    origin: "*",
+    origin: [
+      "http://10.0.60.44:3002",
+      "http://10.0.60.44:3005",
+      "http://10.0.60.44:3004",
+      "http://206.81.11.36:4173",
+      "http://206.81.11.36:4174",
+      "https://blackeagletechsolutions.com",
+      "https://admin.blackeagletechsolutions.com",
+      "http://10.0.60.44:3004",
+      "https://just-client-vercel-heretohelp.vercel.app",
+    ],
+    // origin: "*",
     credentials: true,
   })
 );
