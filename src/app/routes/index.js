@@ -12,6 +12,7 @@ const JobRoutes = require("../module/job/job.routes");
 const NewsRoutes = require("../module/news/news.routes");
 const PartnerRequestRoutes = require("../module/partnerRequest/partnerRequest.routes");
 const ReviewRoutes = require("../module/review/review.routes");
+const NewsletterRoutes = require("../module/newsletter/newsletter.routes");
 
 const moduleRoutes = [
   {
@@ -61,6 +62,10 @@ const moduleRoutes = [
   {
     path: "/review",
     route: ReviewRoutes,
+  },
+  {
+    path: "/newsletter",
+    route: NewsletterRoutes,
   },
 ];
 
