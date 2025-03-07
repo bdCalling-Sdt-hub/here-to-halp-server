@@ -5,9 +5,21 @@ const feedbackSchema = new Schema(
     user: {
       type: Types.ObjectId,
       ref: "User",
+    },
+    name: {
+      type: String,
       required: true,
     },
-    userName: {
+    companyName: {
+      type: String,
+    },
+    phoneNumber: {
+      type: String,
+    },
+    inquiryType: {
+      type: String,
+    },
+    email: {
       type: String,
       required: true,
     },

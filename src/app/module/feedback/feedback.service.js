@@ -1,27 +1,44 @@
 const { status } = require("http-status");
 
 const ApiError = require("../../../error/ApiError");
-const Feedback = require("./feedback.model");
 const QueryBuilder = require("../../../builder/queryBuilder");
+const Feedback = require("./Feedback");
+const validateFields = require("../../../util/validateFields");
+const { EnumUserRole } = require("../../../util/enum");
+const User = require("../user/user.model");
 
 const postFeedback = async (userData, payload) => {
-  const { userId } = userData;
-  const { userName, feedback } = payload;
-  const feedbackData = { user: userId, ...payload };
+  validateFields(payload, ["feedback"]);
+  let user;
 
-  if (!userName || !feedback)
-    throw new ApiError(status.BAD_REQUEST, "Missing userName or feedback");
+  if (!userData) validateFields(payload, ["name", "email"]);
+  else user = await User.findById(userData.userId).lean();
 
-  const result = await Feedback.create(feedbackData);
+  const feedbackData = {
+    ...(userData && {
+      user: userData.userId,
+      name: user.name,
+      email: user.email,
+    }),
+    ...(!userData && {
+      name: payload.name,
+      email: payload.email,
+    }),
+    ...(payload.companyName && { companyName: payload.companyName }),
+    ...(payload.phoneNumber && { phoneNumber: payload.phoneNumber }),
+    ...(payload.inquiryType && { inquiryType: payload.inquiryType }),
+    feedback: payload.feedback,
+  };
 
-  return result;
+  const feedback = await Feedback.create(feedbackData);
+
+  return feedback;
 };
 
-const getFeedback = async (query) => {
-  const { id } = query;
-  if (!id) throw new ApiError(status.NOT_FOUND, "Missing Id");
+const getFeedback = async (userData, query) => {
+  validateFields(query, ["feedbackId"]);
 
-  const feedback = await Feedback.findById(id);
+  const feedback = await Feedback.findById(query.feedbackId);
   if (!feedback) throw new ApiError(status.NOT_FOUND, "Feedback not found");
 
   return feedback;
@@ -40,37 +57,34 @@ const getMyFeedback = async (userData) => {
   };
 };
 
-const getAllFeedback = async (query) => {
-  const feedbackQuery = new QueryBuilder(Feedback.find({}), query)
+const getAllFeedbacks = async (userData, query) => {
+  const queryObj =
+    userData.role === EnumUserRole.ADMIN ? {} : { user: userData.userId };
+
+  const feedbackQuery = new QueryBuilder(Feedback.find(queryObj).lean(), query)
     .search([])
     .filter()
     .sort()
     .paginate()
     .fields();
 
-  const [result, meta] = await Promise.all([
+  const [feedback, meta] = await Promise.all([
     feedbackQuery.modelQuery,
     feedbackQuery.countTotal(),
   ]);
 
-  if (!result.length)
-    throw new ApiError(status.NOT_FOUND, "Feedback not found");
-
   return {
     meta,
-    result,
+    feedback,
   };
 };
 
-const replyFeedback = async (payload) => {
-  const { id, reply, ...others } = payload;
-
-  if (!id || !reply)
-    throw new ApiError(status.NOT_FOUND, "Missing Id or reply");
+const updateFeedbackWithReply = async (useData, payload) => {
+  validateFields(payload, ["feedbackId", "reply"]);
 
   const feedback = await Feedback.findByIdAndUpdate(
-    id,
-    { reply, ...others },
+    payload.feedbackId,
+    { reply: payload.reply },
     { new: true, runValidators: true }
   );
 
@@ -79,12 +93,10 @@ const replyFeedback = async (payload) => {
   return feedback;
 };
 
-const deleteFeedback = async (query) => {
-  const { id } = query;
+const deleteFeedback = async (userData, payload) => {
+  validateFields(payload, ["feedbackId"]);
 
-  if (!id) throw new ApiError(status.NOT_FOUND, "Missing Id");
-
-  const result = await Feedback.deleteOne({ _id: id });
+  const result = await Feedback.deleteOne({ _id: payload.feedbackId });
 
   if (!result.deletedCount)
     throw new ApiError(status.NOT_FOUND, "Feedback not found");
@@ -96,8 +108,8 @@ const FeedbackService = {
   postFeedback,
   getFeedback,
   getMyFeedback,
-  getAllFeedback,
-  replyFeedback,
+  getAllFeedbacks,
+  updateFeedbackWithReply,
   deleteFeedback,
 };
 
