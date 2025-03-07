@@ -1,6 +1,6 @@
-const { FeedbackService } = require("./feedback.service");
-const sendResponse = require("../../../shared/sendResponse");
 const catchAsync = require("../../../shared/catchAsync");
+const sendResponse = require("../../../shared/sendResponse");
+const { FeedbackService } = require("./feedback.service");
 
 const postFeedback = catchAsync(async (req, res) => {
   const result = await FeedbackService.postFeedback(req.user, req.body);
@@ -13,7 +13,7 @@ const postFeedback = catchAsync(async (req, res) => {
 });
 
 const getFeedback = catchAsync(async (req, res) => {
-  const result = await FeedbackService.getFeedback(req.query);
+  const result = await FeedbackService.getFeedback(req.user, req.query);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -23,7 +23,7 @@ const getFeedback = catchAsync(async (req, res) => {
 });
 
 const getMyFeedback = catchAsync(async (req, res) => {
-  const result = await FeedbackService.getMyFeedback(req.user);
+  const result = await FeedbackService.getMyFeedback(req.user, req.query);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -32,8 +32,8 @@ const getMyFeedback = catchAsync(async (req, res) => {
   });
 });
 
-const getAllFeedback = catchAsync(async (req, res) => {
-  const result = await FeedbackService.getAllFeedback(req.query);
+const getAllFeedbacks = catchAsync(async (req, res) => {
+  const result = await FeedbackService.getAllFeedbacks(req.user, req.query);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -42,8 +42,11 @@ const getAllFeedback = catchAsync(async (req, res) => {
   });
 });
 
-const replyFeedback = catchAsync(async (req, res) => {
-  const result = await FeedbackService.replyFeedback(req.body);
+const updateFeedbackWithReply = catchAsync(async (req, res) => {
+  const result = await FeedbackService.updateFeedbackWithReply(
+    req.user,
+    req.body
+  );
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -53,7 +56,7 @@ const replyFeedback = catchAsync(async (req, res) => {
 });
 
 const deleteFeedback = catchAsync(async (req, res) => {
-  const result = await FeedbackService.deleteFeedback(req.query);
+  const result = await FeedbackService.deleteFeedback(req.user, req.body);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -66,8 +69,8 @@ const FeedbackController = {
   postFeedback,
   getFeedback,
   getMyFeedback,
-  getAllFeedback,
-  replyFeedback,
+  getAllFeedbacks,
+  updateFeedbackWithReply,
   deleteFeedback,
 };
 

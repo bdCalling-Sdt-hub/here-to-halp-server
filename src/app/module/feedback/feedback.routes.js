@@ -8,32 +8,27 @@ const router = express.Router();
 router
   .post(
     "/post-feedback",
-    auth(config.auth_level.user),
+    auth(config.auth_level.user, false),
     FeedbackController.postFeedback
   )
   .get(
     "/get-feedback",
-    auth(config.auth_level.admin),
+    auth(config.auth_level.user),
     FeedbackController.getFeedback
   )
   .get(
-    "/get-my-feedback",
+    "/get-all-feedbacks",
     auth(config.auth_level.user),
-    FeedbackController.getMyFeedback
-  )
-  .get(
-    "/get-all-feedback",
-    auth(config.auth_level.admin),
-    FeedbackController.getAllFeedback
+    FeedbackController.getAllFeedbacks
   )
   .patch(
-    "/reply-feedback",
+    "/update-feedback-with-reply",
     auth(config.auth_level.admin),
-    FeedbackController.replyFeedback
+    FeedbackController.updateFeedbackWithReply
   )
   .delete(
     "/delete-feedback",
-    auth(config.auth_level.admin),
+    auth(config.auth_level.user),
     FeedbackController.deleteFeedback
   );
 
