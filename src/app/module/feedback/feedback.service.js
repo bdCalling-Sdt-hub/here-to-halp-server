@@ -4,8 +4,8 @@ const ApiError = require("../../../error/ApiError");
 const QueryBuilder = require("../../../builder/queryBuilder");
 const Feedback = require("./Feedback");
 const validateFields = require("../../../util/validateFields");
-const { EnumUserRole } = require("../../../util/enum");
 const User = require("../user/user.model");
+const { ENUM_USER_ROLE } = require("../../../util/enum");
 
 const postFeedback = async (userData, payload) => {
   validateFields(payload, ["feedback"]);
@@ -59,7 +59,7 @@ const getMyFeedback = async (userData) => {
 
 const getAllFeedbacks = async (userData, query) => {
   const queryObj =
-    userData.role === EnumUserRole.ADMIN ? {} : { user: userData.userId };
+    userData.role === ENUM_USER_ROLE.ADMIN ? {} : { user: userData.userId };
 
   const feedbackQuery = new QueryBuilder(Feedback.find(queryObj).lean(), query)
     .search([])
