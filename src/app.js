@@ -19,6 +19,8 @@ app.use(
       "https://admin.blackeagletechsolutions.com",
       "http://10.0.60.44:3004",
       "https://just-client-vercel-heretohelp.vercel.app",
+      "http://159.65.217.35:4173",
+      "http://159.65.217.35:4174",
     ],
     // origin: "*",
     credentials: true,
